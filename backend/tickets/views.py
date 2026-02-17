@@ -10,8 +10,6 @@ import os
 from .models import Ticket
 from .serializers import TicketSerializer, ClassifySerializer
 
-openai.api_key = os.environ.get('OPENAI_API_KEY')
-
 class TicketListCreateView(generics.ListCreateAPIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
@@ -40,6 +38,9 @@ class TicketUpdateView(generics.UpdateAPIView):
 
 class TicketClassifyView(APIView):
     def post(self, request):
+        # Set API key from environment
+        openai.api_key = os.environ.get('OPENAI_API_KEY')
+        
         serializer = ClassifySerializer(data=request.data)
         if serializer.is_valid():
             description = serializer.validated_data['description']
